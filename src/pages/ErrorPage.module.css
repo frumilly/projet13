@@ -1,0 +1,30 @@
+/* ErrorPage.module.css */
+
+  
+  .main {
+    /* Styles pour le contenu principal */
+    text-align: center;
+  }
+  
+  .error-text {
+    color: #FF6060;
+    font-size: 100px;
+  }
+  .txt{
+    color: #FF6060;
+    margin-top: 70px;
+    margin-bottom: 50px;
+  }
+  
+  .return-link {
+    text-decoration: none;
+    color: #FF6060;
+    border-bottom: 2px solid #FF6060;
+   
+  }
+  
+  .lien{
+    margin-bottom: 90px;
+  }
+
+  
