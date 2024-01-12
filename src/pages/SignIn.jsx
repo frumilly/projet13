@@ -1,18 +1,15 @@
-// SignIn.jsx
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 import style from './SignIn.module.css';
-import { setToken, setUser } from '../actions/userSlice';
-import store from '../actions/store'; 
-import { useEffect } from 'react';
+import { setUser } from '../actions/userSlice';
+import store from '../actions/store';
+
 const loginEndpoint = 'http://localhost:3001/api/v1/user/login';
 const profileEndpoint = 'http://localhost:3001/api/v1/user/profile';
-
 
 const login = createAsyncThunk('auth/login', async (credentials) => {
   try {
@@ -31,12 +28,12 @@ const login = createAsyncThunk('auth/login', async (credentials) => {
 
       const userData = userDataResponse.data.body;
 
-      console.log('Données utilisateur:', userData);
+      console.log('User Data:', userData);
 
       return { ...response.data, userData };
     }
   } catch (error) {
-    console.error('Erreur de connexion:', error);
+    console.error('Login Error:', error);
     throw error;
   }
 });
@@ -45,21 +42,23 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Utiliser useSelector pour accéder aux données utilisateur dans le slice Redux
-  const user = useSelector((state) => state.user.user);
-
-  // Vérifier si l'utilisateur existe dans le Redux store ou le localStorage
-  useEffect(() => {
-    if (user) {
-      console.log("ouii user",user);
-      // Rediriger vers la page '/user' si l'utilisateur existe
-      navigate('/user');
-    } else (console.log("pas d'user"))
-  }, [user, navigate]);
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const checkUserFromLocalStorage = async () => {
+      const userFromLocalStorage = JSON.parse(localStorage.getItem('reduxState'));
+
+      if (userFromLocalStorage && userFromLocalStorage.user) {
+        dispatch(setUser(userFromLocalStorage.user.user));
+        
+        navigate('/user');
+      }
+    };
+
+    checkUserFromLocalStorage();
+  }, [dispatch, navigate]);
 
   const handleLogin = async () => {
     try {
@@ -68,31 +67,27 @@ const SignIn = () => {
         password: password,
       };
 
-      const action = await dispatch(login(credentials));
+      const action = await dispatch(login(credentials)); // à revoir cette ligne enlever dispatch (ne doit pas être ici)
 
       if (login.fulfilled.match(action)) {
-        const { token, userData } = action.payload;
-
-        dispatch(setToken(token));
+        const {  userData } = action.payload;
+      // dispatch(setToken(token));
         dispatch(setUser(userData));
-
-        // Enregistrer l'état Redux dans le localStorage
         const currentState = store.getState();
         localStorage.setItem('reduxState', JSON.stringify(currentState));
 
-        // Rediriger vers la page '/user'
         navigate('/user');
       } else if (login.rejected.match(action)) {
         setError('Invalid credentials. Please try again.');
       }
     } catch (error) {
-      console.error('Erreur de connexion:', error);
+      console.error('Login Error:', error);
     }
   };
 
   return (
     <div>
-      <main className={style.main} bg-dark>
+      <main className={style.main} >
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>
           <h1>Sign In</h1>

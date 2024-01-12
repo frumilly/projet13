@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
@@ -10,20 +10,20 @@ const User = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Utiliser useSelector pour accéder aux données utilisateur dans le slice Redux
   const user = useSelector((state) => state.user.user);
+
+  const [editing, setEditing] = useState(false);
+  const [editedFirstName, setEditedFirstName] = useState(user ? user.firstName : '');
+  const [editedLastName, setEditedLastName] = useState(user ? user.lastName : '');
 
   useEffect(() => {
     const checkUser = async () => {
-      // Si l'utilisateur n'est pas présent dans le slice Redux, on essaie de le récupérer depuis le localStorage
       if (!user) {
         const userFromLocalStorage = JSON.parse(localStorage.getItem('reduxState'));
-        // Si l'utilisateur est présent dans le localStorage, je mets à jour le state Redux
         if (userFromLocalStorage && userFromLocalStorage.user) {
           dispatch(setUser(userFromLocalStorage.user.user));
         } else {
-          // Si l'utilisateur n'est ni dans le state Redux ni dans le localStorage, je redirige vers '/'
-          navigate('/');
+          navigate('/sign-in');
         }
       }
     };
@@ -31,18 +31,54 @@ const User = () => {
     checkUser();
   }, [user, dispatch, navigate]);
 
-  // Console.log pour afficher le prénom dans la section JSX
-  console.log("Affichage du prénom dans le JSX:", user && user.firstName);
+  const handleEditClick = () => {
+    // Pré-remplir les champs avec les valeurs actuelles
+    setEditedFirstName(user ? user.firstName : '');
+    setEditedLastName(user ? user.lastName : '');
+    setEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    // Mettez à jour le state Redux avec les nouvelles valeurs
+    dispatch(setUser({ ...user, firstName: editedFirstName, lastName: editedLastName }));
+    // Réinitialiser les états locaux
+    setEditing(false);
+    setEditedFirstName('');
+    setEditedLastName('');
+  };
 
   return (
     <div>
       <main className="main bg-dark">
         <div className="header">
-          {/* Utilisez les données utilisateur pour afficher le nom */}
           {user && (
             <div>
-              <h1>Welcome back<br />{user.firstName} {user.lastName}!</h1>
-              <button className="edit-button">Edit Name</button>
+              {editing ? (
+                // Formulaire d'édition
+               
+                <div>
+                   <h1>Welcome back </h1>
+                  <input
+                    type="text"
+                    placeholder="First Name"
+                    value={editedFirstName}
+                    onChange={(e) => setEditedFirstName(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Last Name"
+                    value={editedLastName}
+                    onChange={(e) => setEditedLastName(e.target.value)}
+                  />
+                  <button onClick={handleSaveClick}>Save</button>
+                </div>
+              ) : (
+                // Affichage du nom
+                <div>
+                  <h1>Welcome back<br />{user.firstName} {user.lastName}!</h1>
+                  <button className="edit-button" onClick={handleEditClick}>Edit Name</button>
+                </div>
+              )}
             </div>
           )}
         </div>
