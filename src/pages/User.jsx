@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Account from '../components/Account.jsx';
 import { setUser } from '../actions/userSlice';
 import accountData from '../components/accounts_file.json';
+import store from '../actions/store';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -40,11 +41,17 @@ const User = () => {
 
   const handleSaveClick = () => {
     // Mettez à jour le state Redux avec les nouvelles valeurs
-    dispatch(setUser({ ...user, firstName: editedFirstName, lastName: editedLastName }));
+    const updatedUser = { ...user, firstName: editedFirstName, lastName: editedLastName };
+    dispatch(setUser(updatedUser));
+  // Obtenez l'état global actuel
+  const currentState = store.getState();
+
+  // Enregistrez l'état actuel dans le localStorage
+  localStorage.setItem('reduxState', JSON.stringify(currentState));
     // Réinitialiser les états locaux
-    setEditing(false);
-    setEditedFirstName('');
-    setEditedLastName('');
+    //setEditing(false);
+   // setEditedFirstName('');
+   // setEditedLastName('');
   };
 
   return (

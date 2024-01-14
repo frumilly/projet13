@@ -74,6 +74,7 @@ const SignIn = () => {
       // dispatch(setToken(token));
         dispatch(setUser(userData));
         const currentState = store.getState();
+        console.log(currentState);
         localStorage.setItem('reduxState', JSON.stringify(currentState));
 
         navigate('/user');
