@@ -7,17 +7,17 @@ const Header = () => {
   // J'utilise useDispatch pour déclencher des actions Redux et useSelector pour obtenir des données du store.
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
-  
+
 
   // useEffect me permet d'effectuer des actions après le chargement initial du composant.
   useEffect(() => {
-    // Je vérifie s'il y a des données utilisateur dans le localStorage.
-    const userFromLocalStorage = JSON.parse(localStorage.getItem('reduxState'));
 
+    const userFromLocalStorage = JSON.parse(localStorage.getItem('reduxState'));
+    // Je vérifie s'il y a des données utilisateur dans le localStorage.
     // Si des données utilisateur sont présentes, je les définis dans le state Redux.
     if (userFromLocalStorage && userFromLocalStorage.user) {
       dispatch(setUser(userFromLocalStorage.user.user));
-      
+
     }
     // Note : [] signifie que cette action ne doit être exécutée qu'une seule fois après le montage initial.
   }, [dispatch]);
@@ -42,12 +42,19 @@ const Header = () => {
         {user ? (
           // Si un utilisateur est connecté, j'affiche les informations de l'utilisateur et le bouton "Sign Out".
           <div className="user-info">
-            <i className="fa fa-user-circle"></i>
+          <div className="user-info-item">
+            <i className="fa fa-user-circle with-margin"></i>
             <p className="user-name">{user.firstName}</p>
-            <button onClick={handleSignOut} className="main-nav-item">
-              Sign Out
-            </button>
           </div>
+          <div className="user-info-item">
+            <i className="fa fa-sign-out with-margin"></i>
+            <button onClick={handleSignOut} className="main-nav-item sign-out-button">
+
+  Sign Out
+</button>
+          </div>
+        </div>
+        
         ) : (
           // Sinon, j'affiche un lien vers la page de connexion.
           <Link className="main-nav-item" to="/sign-in">

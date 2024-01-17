@@ -1,5 +1,40 @@
 
 @import '~font-awesome/css/font-awesome.min.css';
+/* styles.css (ou tout autre nom de fichier que vous utilisez pour vos styles) */
+
+/* Style du formulaire d'édition */
+.edit-form {
+  margin-top: 20px; /* Ajoutez l'espace entre les champs */
+  
+}
+
+/* Style des champs du formulaire */
+.edit-form input {
+  display: inline-block !important;
+  margin-bottom: 10px; /* Ajoutez l'espace entre les champs */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  color: gray; /* Couleur de la police */
+  margin-right: 10px;
+}
+
+/* Style des boutons Save et Cancel */
+.edit-form button {
+  padding: 10px 15px;
+  background-color: #fff; /* Couleur de fond bleu des boutons */
+  color: #007bff; /* Couleur de la police blanche des boutons */
+  border: 1px solid #007bff; /* Couleur de la bordure bleue des boutons */
+  border-radius: 4px;
+  margin-right: 10px; /* Ajoutez l'espace entre les boutons */
+}
+
+/* Style du cadre bleu autour des boutons */
+.edit-form button.edit-button {
+  border: 1px solid #007bff;
+  border-radius: 4px;
+}
 
 .App {
   text-align: center;
@@ -92,6 +127,36 @@ body {
 .main-nav a.router-link-exact-active {
   color: #42b983;
 }
+.user-info {
+  display: flex;
+  
+}
+
+.user-info-item {
+  margin-right: 1rem; /* Ajustez la marge selon vos besoins */
+  display: flex;
+  align-items: center;
+}
+.with-margin {
+  margin-right: 3px;
+}
+.sign-out-button {
+  text-decoration: none;
+  color: #2c3e50;
+  font-weight: bold;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: none; /* Supprime l'arrière-plan gris du bouton */
+  border: none; /* Supprime la bordure du bouton */
+}
+
+
+.sign-out-button i {
+  margin-right: 5px;
+}
+
 
 .main-nav-item {
   text-decoration: none;
@@ -302,7 +367,7 @@ body {
   border-color: #00bc77;
   background-color: #00bc77;
   color: #fff;
-  font-weight: bold;
+  
   padding: 10px;
 }
 

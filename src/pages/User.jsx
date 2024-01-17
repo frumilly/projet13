@@ -1,3 +1,5 @@
+// User.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +8,7 @@ import Account from '../components/Account.jsx';
 import { setUser } from '../actions/userSlice';
 import accountData from '../components/accounts_file.json';
 import store from '../actions/store';
+
 
 const User = () => {
   const dispatch = useDispatch();
@@ -43,15 +46,14 @@ const User = () => {
     // Mettez à jour le state Redux avec les nouvelles valeurs
     const updatedUser = { ...user, firstName: editedFirstName, lastName: editedLastName };
     dispatch(setUser(updatedUser));
-  // Obtenez l'état global actuel
-  const currentState = store.getState();
-
-  // Enregistrez l'état actuel dans le localStorage
-  localStorage.setItem('reduxState', JSON.stringify(currentState));
+    // Obtenez l'état global actuel
+    const currentState = store.getState();
+    // Enregistrez l'état actuel dans le localStorage
+    localStorage.setItem('reduxState', JSON.stringify(currentState));
     // Réinitialiser les états locaux
-    //setEditing(false);
-   // setEditedFirstName('');
-   // setEditedLastName('');
+    setEditing(false);
+    setEditedFirstName('');
+    setEditedLastName('');
   };
 
   return (
@@ -62,22 +64,25 @@ const User = () => {
             <div>
               {editing ? (
                 // Formulaire d'édition
-               
-                <div>
-                   <h1>Welcome back </h1>
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    value={editedFirstName}
-                    onChange={(e) => setEditedFirstName(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    value={editedLastName}
-                    onChange={(e) => setEditedLastName(e.target.value)}
-                  />
-                  <button onClick={handleSaveClick}>Save</button>
+                <div className="edit-form">
+                  <h1>Welcome back</h1>
+                  <div className="input-container">
+                    <input
+                      type="text"
+                      placeholder="First Name"
+                      value={editedFirstName}
+                      onChange={(e) => setEditedFirstName(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Last Name"
+                      value={editedLastName}
+                      onChange={(e) => setEditedLastName(e.target.value)}
+                    />
+                  </div>
+                  <br />
+                  <button className="edit-button" onClick={handleSaveClick}>Save</button>
+                  <button onClick={() => setEditing(false)}>Cancel</button>
                 </div>
               ) : (
                 // Affichage du nom

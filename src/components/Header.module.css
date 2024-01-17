@@ -1,0 +1,90 @@
+/* styles.css */
+
+/* Reset de la marge et de la police par défaut */
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+  
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Styles de la barre de navigation */
+  .main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+  }
+  
+  .main-nav a {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  .main-nav a.router-link-exact-active {
+    color: #42b983;
+  }
+  
+  .main-nav-item {
+    text-decoration: none;
+    margin-right: 0.5rem;
+  }
+  
+  
+  
+  .main-nav-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none; 
+    outline: none;
+  }
+  
+  .main-nav-logo-image {
+    width: 200px; 
+    height: 70px; 
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-image: url('../img/argentBankLogo.png');
+  }
+  .main-nav-logo-image {
+    border: none !important;
+  }
+  
+  /* Styles de la section utilisateur */
+  .user-info-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    color: #333;
+  }
+  
+  .user-info i {
+    margin-right: 10px;
+  }
+  
+  .user-name {
+    margin-right: 20px;
+  }
+  
+  .main-nav-item {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  /* Ajoutez d'autres styles en fonction de vos besoins */
+  
+  

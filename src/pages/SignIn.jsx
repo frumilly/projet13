@@ -67,11 +67,11 @@ const SignIn = () => {
         password: password,
       };
 
-      const action = await dispatch(login(credentials)); // à revoir cette ligne enlever dispatch (ne doit pas être ici)
+      const action = await dispatch(login(credentials)); 
 
       if (login.fulfilled.match(action)) {
         const {  userData } = action.payload;
-      // dispatch(setToken(token));
+    
         dispatch(setUser(userData));
         const currentState = store.getState();
         console.log(currentState);
