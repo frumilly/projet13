@@ -8,7 +8,39 @@ import Account from '../components/Account.jsx';
 import { setUser } from '../actions/userSlice';
 import accountData from '../components/accounts_file.json';
 import store from '../actions/store';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
+
+
+// Endpoint pour la mise à jour du profil
+const updateProfileEndpoint = 'http://localhost:3001/api/v1/user/profile';
+
+// Thunk pour la mise à jour du profil
+const updateProfile = createAsyncThunk('user/updateProfile', async (userData, { getState, dispatch }) => {
+  try {
+    const token = getState().user.token;
+    console.log("token",getState().user.token);
+
+    // Effectuer la requête PUT avec le token dans l'en-tête
+    await axios.put(
+      updateProfileEndpoint,
+      { firstName: userData.firstName, lastName: userData.lastName },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Mettre à jour le state Redux avec les nouvelles valeurs
+    dispatch(setUser(userData));
+  } catch (error) {
+    console.error('Update Profile Error:', error);
+    throw error;
+  }
+});
 
 const User = () => {
   const dispatch = useDispatch();
@@ -42,18 +74,32 @@ const User = () => {
     setEditing(true);
   };
 
-  const handleSaveClick = () => {
-    // Mettez à jour le state Redux avec les nouvelles valeurs
-    const updatedUser = { ...user, firstName: editedFirstName, lastName: editedLastName };
-    dispatch(setUser(updatedUser));
-    // Obtenez l'état global actuel
-    const currentState = store.getState();
-    // Enregistrez l'état actuel dans le localStorage
-    localStorage.setItem('reduxState', JSON.stringify(currentState));
-    // Réinitialiser les états locaux
-    setEditing(false);
-    setEditedFirstName('');
-    setEditedLastName('');
+  const handleSaveClick = async () => {
+    try {
+      // Créez un objet userData avec les nouvelles valeurs du profil
+      const userData = {
+        ...user,
+        firstName: editedFirstName,
+        lastName: editedLastName,
+      };
+      console.log(userData);
+
+      // Dispatchez le thunk pour la mise à jour du profil
+     await dispatch(updateProfile(userData));
+
+      // Obtenez l'état global actuel
+      const currentState = store.getState();
+      
+      // Enregistrez l'état actuel dans le localStorage
+      localStorage.setItem('reduxState', JSON.stringify(currentState));
+
+      // Réinitialiser les états locaux
+      setEditing(false);
+      setEditedFirstName('');
+      setEditedLastName('');
+    } catch (error) {
+      console.error('Save Profile Error:', error);
+    }
   };
 
   return (
@@ -95,10 +141,14 @@ const User = () => {
           )}
         </div>
 
-        {/* Reste du contenu ici */}
-        {accountData.map((account, index) => (
-          <Account key={index} title={account.title} amount={account.amount} />
-        ))}
+        {/* Contenu restant */}
+        {user && (
+          <div>
+            {accountData.map((account, index) => (
+              <Account key={index} title={account.title} amount={account.amount} />
+            ))}
+          </div>
+        )}
       </main>
       <Footer />
     </div>

@@ -1,3 +1,5 @@
+// SignIn.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createAsyncThunk } from '@reduxjs/toolkit';
@@ -5,7 +7,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 import style from './SignIn.module.css';
-import { setUser } from '../actions/userSlice';
+import { setUser,setToken } from '../actions/userSlice';
 import store from '../actions/store';
 
 const loginEndpoint = 'http://localhost:3001/api/v1/user/login';
@@ -14,6 +16,7 @@ const profileEndpoint = 'http://localhost:3001/api/v1/user/profile';
 const login = createAsyncThunk('auth/login', async (credentials) => {
   try {
     const response = await axios.post(loginEndpoint, credentials);
+
     if (response.data.body) {
       const userDataResponse = await axios.post(
         profileEndpoint,
@@ -30,7 +33,7 @@ const login = createAsyncThunk('auth/login', async (credentials) => {
 
       console.log('User Data:', userData);
 
-      return { ...response.data, userData };
+      return { token: response.data.body.token, userData };
     }
   } catch (error) {
     console.error('Login Error:', error);
@@ -52,7 +55,7 @@ const SignIn = () => {
 
       if (userFromLocalStorage && userFromLocalStorage.user) {
         dispatch(setUser(userFromLocalStorage.user.user));
-        
+
         navigate('/user');
       }
     };
@@ -67,12 +70,14 @@ const SignIn = () => {
         password: password,
       };
 
-      const action = await dispatch(login(credentials)); 
+      const action = await dispatch(login(credentials));
 
       if (login.fulfilled.match(action)) {
-        const {  userData } = action.payload;
-    
+        const { token, userData } = action.payload;
+
+
         dispatch(setUser(userData));
+        dispatch(setToken(token)); 
         const currentState = store.getState();
         console.log(currentState);
         localStorage.setItem('reduxState', JSON.stringify(currentState));
@@ -88,7 +93,7 @@ const SignIn = () => {
 
   return (
     <div>
-      <main className={style.main} >
+      <main className={style.main}>
         <section className="sign-in-content">
           <i className="fa fa-user-circle sign-in-icon"></i>
           <h1>Sign In</h1>
